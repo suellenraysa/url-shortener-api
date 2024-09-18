@@ -1,0 +1,44 @@
+version: '3.2'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - 33020:3306
+    # volumes:
+    #   - ./mariadb/data:/var/lib/mysql
+    #   - ./mariadb/conf/:/etc/mysql/conf.d/
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${TYPEORM_PASSWORD}
+      MYSQL_DATABASE: ${TYPEORM_DATABASE}      
+      MYSQL_USER: ${TYPEORM_USERNAME}
+      MYSQL_TCP_PORT: 3306
+
+  nestjs:
+    image: shortenerurl-api
+    container_name: shortenerurl-api
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    restart: always
+    depends_on:
+      - mariadb
+    networks:
+      - app-network
+    # volumes:
+    #   - ./:/app
+    #   - /app/node_modules
+    env_file:
+      - ./.env
+    ports:
+      - 3000:3000
+
+networks:
+  app-network:
+    driver: bridge
