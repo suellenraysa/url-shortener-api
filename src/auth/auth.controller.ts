@@ -14,7 +14,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Autenticar um usuário' })
   @ApiBody({ 
     description: 'Credenciais de login', 
-    type: LoginSwagger // Supondo que você tenha um DTO para o login
+    type: LoginSwagger 
   }) 
   @ApiResponse({
     status: 200,
